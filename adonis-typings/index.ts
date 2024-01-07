@@ -1,0 +1,1 @@
+/// <reference path="./pdf.ts" />
