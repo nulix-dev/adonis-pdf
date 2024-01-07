@@ -1,11 +1,9 @@
-import { Browsershot, Unit } from '@nulix/browsershot'
+import { Browsershot, Unit, Format } from '@nulix/browsershot'
 
-import { DisksList, DriveManagerContract } from '@ioc:Adonis/Core/Drive'
-import { ResponseContract } from '@ioc:Adonis/Core/Response'
-import { PdfManagerContract, Format, Orientation } from '@ioc:Adonis/Addons/Pdf'
 import { ViewContract } from '@ioc:Adonis/Core/View'
-
-import { FakePdfManager } from '../fake'
+import { PdfManagerContract } from '@ioc:Adonis/Addons/Pdf'
+import { ResponseContract } from '@ioc:Adonis/Core/Response'
+import { DisksList, DriveManagerContract } from '@ioc:Adonis/Core/Drive'
 
 /**
  * Pdf manager exposes the API to create pdf files
@@ -14,8 +12,8 @@ export class PdfManager implements PdfManagerContract {
   public _html: string = ''
   public _headerHtml?: string
   public _footerHtml?: string
-  public _format?: string
-  public _orientation?: string
+  public _format?: Format
+  public _orientation?: 'Landscape' | 'Portrait'
   public _margins?: {
     top: number
     right: number
@@ -52,6 +50,8 @@ export class PdfManager implements PdfManagerContract {
   constructor(private drive: DriveManagerContract, private viewContract: ViewContract) {}
 
   public fake() {
+    const { FakePdfManager } = require('../fake/index')
+
     return new FakePdfManager(this.drive, this.viewContract)
   }
 
@@ -77,14 +77,14 @@ export class PdfManager implements PdfManagerContract {
   }
 
   public landscape() {
-    return this.orientation(Orientation.Landscape)
+    return this.orientation('Landscape')
   }
 
   public portrait() {
-    return this.orientation(Orientation.Portrait)
+    return this.orientation('Portrait')
   }
 
-  public orientation(orientation: Orientation) {
+  public orientation(orientation: 'Landscape' | 'Portrait') {
     this._orientation = orientation
 
     return this
@@ -275,7 +275,7 @@ export class PdfManager implements PdfManagerContract {
       browsershot.format(this._format)
     }
 
-    if (this._orientation === Orientation.Landscape) {
+    if (this._orientation === 'Landscape') {
       browsershot.landscape()
     }
 

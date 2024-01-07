@@ -1,6 +1,7 @@
 import { ViewContract } from '@ioc:Adonis/Core/View'
-import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 import { DriveManagerContract } from '@ioc:Adonis/Core/Drive'
+import { ApplicationContract } from '@ioc:Adonis/Core/Application'
+
 import { PdfManager } from '../src/pdf_manager'
 
 /**

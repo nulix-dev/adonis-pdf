@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Create PDFs in AdonisJS apps",
   "main": "build/providers/PdfProvider.js",
+  "typings": "build/adonis-typings/index.d.ts",
   "files": [
     "build/adonis-typings",
     "build/providers",
@@ -13,7 +14,8 @@
     "pretest": "npm run lint",
     "test": "node -r @adonisjs/require-ts/build/register bin/test.ts",
     "clean": "del build",
-    "compile": "npm run lint && npm run clean && tsc",
+    "precompile": "npm run lint && npm run clean",
+    "compile": "tsc",
     "build": "npm run compile",
     "prepublishOnly": "npm run build",
     "lint": "eslint . --ext=.ts",
@@ -63,7 +65,7 @@
     "anyBranch": false
   },
   "dependencies": {
-    "@nulix/browsershot": "^0.2.3"
+    "@nulix/browsershot": "^0.2.5"
   },
   "peerDependencies": {
     "@adonisjs/core": "^5.0.0",
@@ -127,5 +129,11 @@
     "bracketSpacing": true,
     "arrowParens": "always",
     "printWidth": 100
+  },
+  "adonisjs": {
+    "types": "@nulix/adonis-pdf",
+    "providers": [
+      "@nulix/adonis-pdf"
+    ]
   }
 }

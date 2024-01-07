@@ -1,27 +1,8 @@
 declare module '@ioc:Adonis/Addons/Pdf' {
-  import { Unit } from '@nulix/browsershot'
+  import { Unit, Format } from '@nulix/browsershot'
 
   import { DisksList } from '@ioc:Adonis/Core/Drive'
   import { ResponseContract } from '@ioc:Adonis/Core/Response'
-
-  export enum Format {
-    Letter = 'letter',
-    Legal = 'legal',
-    Tabloid = 'tabloid',
-    Ledger = 'ledger',
-    A0 = 'a0',
-    A1 = 'a1',
-    A2 = 'a2',
-    A3 = 'a3',
-    A4 = 'a4',
-    A5 = 'a5',
-    A6 = 'a6',
-  }
-
-  export enum Orientation {
-    Portrait = 'Portrait',
-    Landscape = 'Landscape',
-  }
 
   export interface FakePdfManagerContract extends PdfManagerContract {
     assertViewIs(viewName: string): boolean
@@ -137,7 +118,7 @@ declare module '@ioc:Adonis/Addons/Pdf' {
     /**
      * Set the PDF orientation.
      */
-    orientation(orientation: Orientation): this
+    orientation(orientation: 'Landscape' | 'Portrait'): this
 
     /**
      * Set headers for inline PDF display.
