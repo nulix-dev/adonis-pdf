@@ -33,7 +33,6 @@
   "license": "MIT",
   "devDependencies": {
     "@adonisjs/core": "^5.9.0",
-    "@adonisjs/drive": "^2.3.0",
     "@adonisjs/mrm-preset": "^5.0.3",
     "@adonisjs/require-ts": "^2.0.13",
     "@adonisjs/view": "^6.2.0",
@@ -69,7 +68,6 @@
   },
   "peerDependencies": {
     "@adonisjs/core": "^5.0.0",
-    "@adonisjs/drive": "^2.0.0",
     "@adonisjs/view": "^6.0.0"
   },
   "directories": {

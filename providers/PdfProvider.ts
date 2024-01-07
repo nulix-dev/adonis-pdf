@@ -50,10 +50,11 @@ export default class PdfProvider {
   }
 
   public boot() {
-    this.app.container.withBindings(['Adonis/Core/Drive', 'Adonis/Core/View'], (Drive, View) => {
-      this.registerPdf(Drive, View)
-      this.registerPdfViewGlobal(View)
-      this.registerPdfTags(View)
-    })
+    const Drive = this.app.container.resolveBinding('Adonis/Core/Drive')
+    const View = this.app.container.resolveBinding('Adonis/Core/View')
+
+    this.registerPdf(Drive, View)
+    this.registerPdfViewGlobal(View)
+    this.registerPdfTags(View)
   }
 }
