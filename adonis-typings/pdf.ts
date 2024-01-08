@@ -203,5 +203,5 @@ declare module '@ioc:Adonis/Addons/Pdf' {
 
   const Pdf: PdfManagerContract
 
-  export default Pdf
+  export { Pdf, Format, Unit }
 }

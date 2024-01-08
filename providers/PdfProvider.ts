@@ -3,6 +3,7 @@ import { DriveManagerContract } from '@ioc:Adonis/Core/Drive'
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
 import { PdfManager } from '../src/pdf_manager'
+import { Format, Unit } from '@nulix/browsershot'
 
 /**
  * Registers pdf with the IoC container
@@ -15,7 +16,9 @@ export default class PdfProvider {
    */
   protected registerPdf(Drive: DriveManagerContract, View: ViewContract) {
     this.app.container.singleton('Adonis/Addons/Pdf', () => {
-      return new PdfManager(Drive, View)
+      const pdf = new PdfManager(Drive, View)
+
+      return { Format, Unit, Pdf: pdf }
     })
   }
 

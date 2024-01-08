@@ -1,7 +1,7 @@
 import { Browsershot, Unit, Format } from '@nulix/browsershot'
 
 import { ViewContract } from '@ioc:Adonis/Core/View'
-import { PdfManagerContract } from '@ioc:Adonis/Addons/Pdf'
+import { FakePdfManagerContract, PdfManagerContract } from '@ioc:Adonis/Addons/Pdf'
 import { ResponseContract } from '@ioc:Adonis/Core/Response'
 import { DisksList, DriveManagerContract } from '@ioc:Adonis/Core/Drive'
 
@@ -30,6 +30,8 @@ export class PdfManager implements PdfManagerContract {
   public footerData: object = {}
   public downloadName: string = ''
 
+  public fakePdfManager?: FakePdfManagerContract
+
   /**
    * Callback function to customize Browsershot.
    */
@@ -52,7 +54,9 @@ export class PdfManager implements PdfManagerContract {
   public fake() {
     const { FakePdfManager } = require('../fake/index')
 
-    return new FakePdfManager(this.drive, this.viewContract)
+    this.fakePdfManager = new FakePdfManager(this.drive, this.viewContract)
+
+    return this.fakePdfManager!
   }
 
   public view(view: string, data: object = {}) {
@@ -145,6 +149,10 @@ export class PdfManager implements PdfManagerContract {
   }
 
   public async base64() {
+    if (this.fakePdfManager) {
+      return ''
+    }
+
     const browsershotInstance = await this.getBrowsershot()
 
     return browsershotInstance.base64pdf()
@@ -175,6 +183,12 @@ export class PdfManager implements PdfManagerContract {
   }
 
   public async save(path: string) {
+    if (this.fakePdfManager) {
+      await this.fakePdfManager.save(path)
+
+      return this
+    }
+
     if (this.diskName) {
       return this.saveOnDisk(this.diskName, path)
     }
@@ -287,6 +301,10 @@ export class PdfManager implements PdfManagerContract {
   }
 
   public async toResponse(response: ResponseContract) {
+    if (this.fakePdfManager) {
+      return this.fakePdfManager.toResponse(response)
+    }
+
     if (!this.hasHeader('Content-Disposition')) {
       this.inline(this.downloadName)
     }
