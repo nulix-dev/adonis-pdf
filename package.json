@@ -2,13 +2,12 @@
   "name": "@nulix/adonis-pdf",
   "version": "0.2.3",
   "description": "Create PDFs in AdonisJS apps",
-  "main": "build/index.js",
-  "typings": "build/index.d.ts",
+  "main": "build/src/index.js",
+  "typings": "build/src/index.d.ts",
   "files": [
     "build/adonis-typings",
     "build/providers",
-    "build/src",
-    "index.js"
+    "build/src"
   ],
   "scripts": {
     "mrm": "mrm --preset=@adonisjs/mrm-preset",

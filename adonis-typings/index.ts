@@ -1,3 +1,3 @@
 /// <reference path="./pdf.ts" />
-/// <reference path="../japa-plugin/index.ts" />
-/// <reference path="../japa-plugin/asserts.ts" />
+/// <reference path="../src/japa_plugin/index.ts" />
+/// <reference path="../src/japa_plugin/asserts.ts" />
