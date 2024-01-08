@@ -68,7 +68,9 @@
   },
   "peerDependencies": {
     "@adonisjs/core": "^5.0.0",
-    "@adonisjs/view": "^6.0.0"
+    "@adonisjs/view": "^6.0.0",
+    "@japa/assert": "^1.0.0",
+    "@japa/runner": "^2.0.0"
   },
   "directories": {
     "test": "test"

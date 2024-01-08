@@ -1,59 +1,74 @@
-<div align="center">
-  <img src="https://res.cloudinary.com/adonisjs/image/upload/q_100/v1558612869/adonis-readme_zscycu.jpg" width="600px">
-</div>
+# Create PDFs in AdonisJS apps
 
-<br />
+[![Latest Version](https://img.shields.io/github/release/nulix-dev/adonis-pdf.svg?style=flat-square)](https://github.com/nulix-dev/adonis-pdf/releases)
+[![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![run-tests](https://img.shields.io/github/actions/workflow/status/nulix-dev/adonis-pdf/test.yml?label=tests&style=flat-square)](https://github.com/nulix-dev/adonis-pdf/actions)
 
-<div align="center">
-  <h3>AdonisJS Drive</h3>
-  <p>
-    An abstraction on top of cloud storage services like <strong>Google cloud</strong>, <strong>Amazon S3</strong>, and <strong>Digital ocean spaces</strong>. Can be extended to add custom drivers.
-  </p>
-</div>
+This package provides a simple way to create PDFs in AdonisJS apps. Under the hood it uses [Chromium](https://www.chromium.org/chromium-projects/) to generate PDFs from Blade views. You can use modern CSS features like grid and flexbox to create beautiful PDFs.
 
-<br />
+```bash
+npm i @nulix/adonis-pdf
 
-<div align="center">
+node ace @nulix/adonis-pdf
+```
 
-[![gh-workflow-image]][gh-workflow-url] [![npm-image]][npm-url] ![][typescript-image] [![license-image]][license-url] [![synk-image]][synk-url]
+Here's a quick example:
 
-</div>
+```ts
+import { Pdf, Format } from "@ioc:Adonis/Addons/Pdf"
 
-<div align="center">
-  <h3>
-    <a href="https://adonisjs.com">
-      Website
-    </a>
-    <span> | </span>
-    <a href="https://docs.adonisjs.com/guides/drive">
-      Guides
-    </a>
-    <span> | </span>
-    <a href="CONTRIBUTING.md">
-      Contributing
-    </a>
-    <span> | </span>
-    <a href="benchmarks.md">
-      Benchmarks
-    </a>
-  </h3>
-</div>
+Pdf.view('pdfs.invoice', { invoice })
+    .format(Format.A4)
+    .save('invoice.pdf')
+```
 
-<div align="center">
-  <sub>Built with ❤︎ by <a href="https://twitter.com/AmanVirk1">Harminder Virk</a>
-</div>
+This will render the Edge view `pdfs.invoice` with the given data and save it as a PDF file.
 
-[gh-workflow-image]: https://img.shields.io/github/workflow/status/adonisjs/drive/test?style=for-the-badge
-[gh-workflow-url]: https://github.com/adonisjs/drive/actions/workflows/test.yml "Github action"
+You can also return the PDF as a response from your controller:
 
-[typescript-image]: https://img.shields.io/badge/Typescript-294E80.svg?style=for-the-badge&logo=typescript
-[typescript-url]:  "typescript"
+```ts
+import { Pdf, Format } from "@ioc:Adonis/Addons/Pdf"
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-[npm-image]: https://img.shields.io/npm/v/@adonisjs/drive.svg?style=for-the-badge&logo=npm
-[npm-url]: https://npmjs.org/package/@adonisjs/drive "npm"
+import Invoice from "App/Models/Invoice"
 
-[license-image]: https://img.shields.io/npm/l/@adonisjs/drive?color=blueviolet&style=for-the-badge
-[license-url]: LICENSE.md "license"
+class DownloadInvoiceController
+{
+    public function download({ response }: HttpContextContract)
+    {
+        const invoice = Invoice.first()
 
-[synk-image]: https://img.shields.io/snyk/vulnerabilities/github/adonisjs/drive?label=Synk%20Vulnerabilities&style=for-the-badge
-[synk-url]: https://snyk.io/test/github/adonisjs/drive?targetFile=package.json "synk"
+        return Pdf.view('pdfs.invoice', { invoice })
+            .name('your-invoice.pdf')
+            .format(Format.A4)
+            .toResponse(response);
+    }
+}
+```
+
+You can use also test your PDFs:
+
+```ts
+import { test } from "@japa/core"
+
+import { Pdf } from "@ioc:Adonis/Addons/Pdf"
+
+
+test('can render an invoice', async ({ client, assert }) => {
+  const pdf = Pdf.fake();
+
+  const response = await client.get('/')
+
+  response.assertStatus(200)
+  response.assertBodyContains({ hello: 'world' })
+})
+
+```
+
+## Documentation
+
+All documentation is available [on our documentation site](https://example.com).
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.

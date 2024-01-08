@@ -4,16 +4,16 @@ declare module '@ioc:Adonis/Addons/Pdf' {
   import { DisksList } from '@ioc:Adonis/Core/Drive'
   import { ResponseContract } from '@ioc:Adonis/Core/Response'
 
-  export interface FakePdfManagerContract extends PdfManagerContract {
+  export interface FakePdfManagerContract {
     assertViewIs(viewName: string): boolean
 
     assertViewHas(key: string, value?: any): boolean
 
-    assertSaved(path: string | ((pdf: FakePdfManagerContract, path: string) => boolean)): boolean
+    assertSaved(path: string | ((pdf: PdfManagerContract, path: string) => boolean)): boolean
 
     assertSee(text: string | string[]): boolean
 
-    assertRespondedWithPdf(expectations: (pdf: FakePdfManagerContract) => boolean): boolean
+    assertRespondedWithPdf(expectations: (pdf: PdfManagerContract) => boolean): boolean
   }
 
   export interface PdfManagerContract {

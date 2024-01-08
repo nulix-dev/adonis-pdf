@@ -1,14 +1,15 @@
 import { Browsershot, Unit, Format } from '@nulix/browsershot'
 
 import { ViewContract } from '@ioc:Adonis/Core/View'
-import { FakePdfManagerContract, PdfManagerContract } from '@ioc:Adonis/Addons/Pdf'
+import { PdfManagerContract } from '@ioc:Adonis/Addons/Pdf'
 import { ResponseContract } from '@ioc:Adonis/Core/Response'
 import { DisksList, DriveManagerContract } from '@ioc:Adonis/Core/Drive'
+import { FakePdfManager } from '../fake'
 
 /**
  * Pdf manager exposes the API to create pdf files
  */
-export class PdfManager implements PdfManagerContract {
+export class PdfManager extends FakePdfManager implements PdfManagerContract {
   public _html: string = ''
   public _headerHtml?: string
   public _footerHtml?: string
@@ -29,8 +30,9 @@ export class PdfManager implements PdfManagerContract {
   public footerViewName: string = ''
   public footerData: object = {}
   public downloadName: string = ''
+  public isFake = false
 
-  public fakePdfManager?: FakePdfManagerContract
+  protected fakePDFs: { pdf: PdfManagerContract; path: string | null }[] = []
 
   /**
    * Callback function to customize Browsershot.
@@ -49,14 +51,14 @@ export class PdfManager implements PdfManagerContract {
    */
   protected diskName: keyof DisksList
 
-  constructor(private drive: DriveManagerContract, private viewContract: ViewContract) {}
+  constructor(private drive: DriveManagerContract, private viewContract: ViewContract) {
+    super()
+  }
 
   public fake() {
-    const { FakePdfManager } = require('../fake/index')
+    this.isFake = true
 
-    this.fakePdfManager = new FakePdfManager(this.drive, this.viewContract)
-
-    return this.fakePdfManager!
+    return this
   }
 
   public view(view: string, data: object = {}) {
@@ -149,11 +151,13 @@ export class PdfManager implements PdfManagerContract {
   }
 
   public async base64() {
-    if (this.fakePdfManager) {
+    const browsershotInstance = await this.getBrowsershot()
+
+    if (this.isFake) {
+      this.addFakePdf()
+
       return ''
     }
-
-    const browsershotInstance = await this.getBrowsershot()
 
     return browsershotInstance.base64pdf()
   }
@@ -183,17 +187,17 @@ export class PdfManager implements PdfManagerContract {
   }
 
   public async save(path: string) {
-    if (this.fakePdfManager) {
-      await this.fakePdfManager.save(path)
-
-      return this
-    }
-
     if (this.diskName) {
       return this.saveOnDisk(this.diskName, path)
     }
 
     const browsershotInstance = await this.getBrowsershot()
+
+    if (this.isFake) {
+      this.addFakePdf()
+
+      return this
+    }
 
     await browsershotInstance.save(path)
 
@@ -208,6 +212,12 @@ export class PdfManager implements PdfManagerContract {
 
   protected async saveOnDisk(diskName: keyof DisksList, path: string) {
     const browsershotInstance = await this.getBrowsershot()
+
+    if (this.isFake) {
+      this.addFakePdf()
+
+      return this
+    }
 
     const pdfContent = await browsershotInstance.pdf()
 
@@ -301,15 +311,17 @@ export class PdfManager implements PdfManagerContract {
   }
 
   public async toResponse(response: ResponseContract) {
-    if (this.fakePdfManager) {
-      return this.fakePdfManager.toResponse(response)
-    }
-
     if (!this.hasHeader('Content-Disposition')) {
       this.inline(this.downloadName)
     }
 
     const browsershotInstance = await this.getBrowsershot()
+
+    if (this.isFake) {
+      this.addFakePdf()
+
+      return
+    }
 
     const pdfContent = await browsershotInstance.pdf()
 
@@ -344,5 +356,12 @@ export class PdfManager implements PdfManagerContract {
     }
 
     return this.responseHeaders['Content-Disposition'].includes('attachment')
+  }
+
+  protected addFakePdf(path?: string) {
+    this.fakePDFs.push({
+      pdf: { ...this },
+      path: path ?? null,
+    })
   }
 }

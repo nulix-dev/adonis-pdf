@@ -1,34 +1,13 @@
-import { ResponseContract } from '@ioc:Adonis/Core/Response'
-import { FakePdfManagerContract } from '@ioc:Adonis/Addons/Pdf'
-
-import { PdfManager } from '../pdf_manager'
+import { FakePdfManagerContract, PdfManagerContract } from '@ioc:Adonis/Addons/Pdf'
 
 /**
  * An implementation of the fake Pdf
  */
-export class FakePdfManager extends PdfManager implements FakePdfManagerContract {
-  protected respondedWithPdf: FakePdfManagerContract[] = []
-  protected savedPdfs: { pdf: FakePdfManagerContract; path: string }[] = []
-
-  public async save(path: string) {
-    this.getBrowsershot()
-
-    this.savedPdfs.push({
-      pdf: { ...this },
-      path,
-    })
-
-    return this
-  }
-
-  public async toResponse(_response: ResponseContract) {
-    this.respondedWithPdf.push({ ...this }) // Clone the PdfBuilder
-
-    return
-  }
+export class FakePdfManager implements FakePdfManagerContract {
+  protected fakePDFs: { pdf: PdfManagerContract; path: string | null }[] = []
 
   public assertViewIs(viewName: string) {
-    for (const savedPdf of this.savedPdfs) {
+    for (const savedPdf of this.fakePDFs) {
       if (savedPdf.pdf.viewName === viewName) {
         return true
       }
@@ -39,7 +18,7 @@ export class FakePdfManager extends PdfManager implements FakePdfManagerContract
 
   public assertViewHas(key: string, value?: any) {
     if (value === undefined) {
-      for (const savedPdf of this.savedPdfs) {
+      for (const savedPdf of this.fakePDFs) {
         if (key in savedPdf.pdf.viewData) {
           return true
         }
@@ -48,7 +27,7 @@ export class FakePdfManager extends PdfManager implements FakePdfManagerContract
       throw new Error(`Did not save a PDF that has view data '${key}'`)
     }
 
-    for (const savedPdf of this.savedPdfs) {
+    for (const savedPdf of this.fakePDFs) {
       if (key in savedPdf.pdf.viewData && savedPdf.pdf.viewData[key] === value) {
         return true
       }
@@ -57,9 +36,9 @@ export class FakePdfManager extends PdfManager implements FakePdfManagerContract
     throw new Error(`Did not save a PDF that has view data '${key}' with value '${value}'`)
   }
 
-  public assertSaved(path: string | ((pdf: FakePdfManagerContract, path: string) => boolean)) {
+  public assertSaved(path: string | ((pdf: PdfManagerContract, path: string) => boolean)) {
     if (typeof path === 'string') {
-      for (const savedPdf of this.savedPdfs) {
+      for (const savedPdf of this.fakePDFs) {
         if (savedPdf.path === path) {
           return true
         }
@@ -69,8 +48,8 @@ export class FakePdfManager extends PdfManager implements FakePdfManagerContract
     }
 
     const callable = path
-    for (const savedPdf of this.savedPdfs) {
-      const result = callable(savedPdf.pdf, savedPdf.path)
+    for (const savedPdf of this.fakePDFs) {
+      const result = callable(savedPdf.pdf, savedPdf.path!)
 
       if (result === true) {
         return true
@@ -83,7 +62,7 @@ export class FakePdfManager extends PdfManager implements FakePdfManagerContract
   public assertSee(text: string | string[]) {
     const texts = Array.isArray(text) ? text : [text]
 
-    for (const savedPdf of this.savedPdfs) {
+    for (const savedPdf of this.fakePDFs) {
       let containsAll = true
       for (const singleText of texts) {
         if (!savedPdf.pdf._html.includes(singleText)) {
@@ -101,12 +80,12 @@ export class FakePdfManager extends PdfManager implements FakePdfManagerContract
     throw new Error(`Did not save a PDF that contains ${formattedTexts}`)
   }
 
-  public assertRespondedWithPdf(expectations: (pdf: FakePdfManagerContract) => boolean) {
-    if (this.respondedWithPdf.length === 0) {
+  public assertRespondedWithPdf(expectations: (pdf: PdfManagerContract) => boolean) {
+    if (this.fakePDFs.length === 0) {
       throw new Error('Did not respond with a PDF')
     }
 
-    for (const pdf of this.respondedWithPdf) {
+    for (const { pdf } of this.fakePDFs) {
       const result = expectations(pdf)
 
       if (result === true) {
