@@ -1,6 +1,6 @@
 {
   "name": "@nulix/adonis-pdf",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "description": "Create PDFs in AdonisJS apps",
   "main": "build/src/index.js",
   "typings": "build/src/index.d.ts",
