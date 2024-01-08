@@ -4,6 +4,8 @@
 
 import PdfProvider from '../providers/PdfProvider'
 
+import './japa_plugin/asserts'
+
 export { assertPdf } from './japa_plugin'
 
 export default PdfProvider

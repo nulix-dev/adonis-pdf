@@ -5,7 +5,7 @@ import { PluginFn } from '@japa/runner'
  */
 export function assertPdf() {
   const plugin: PluginFn = function () {
-    require('./asserts')
+    // TODO
   }
 
   return plugin
