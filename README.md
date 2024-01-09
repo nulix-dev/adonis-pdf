@@ -6,7 +6,7 @@
 
 > **Note**
 >
-> This package is a AdonisJS version of the Laravel package [spatie/browsershot](https://github.com/spatie/laravel-pdf).
+> This package is a AdonisJS version of the Laravel package [spatie/laravel-pdf](https://github.com/spatie/laravel-pdf).
 
 This package provides a simple way to create PDFs in AdonisJS apps. Under the hood it uses [Chromium](https://www.chromium.org/chromium-projects/) to generate PDFs from EdgeJS views. You can use modern CSS features like grid and flexbox to create beautiful PDFs.
 
