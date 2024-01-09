@@ -4,6 +4,10 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![run-tests](https://img.shields.io/github/actions/workflow/status/nulix-dev/adonis-pdf/test.yml?label=tests&style=flat-square)](https://github.com/nulix-dev/adonis-pdf/actions)
 
+> **Note**
+>
+> This package is a AdonisJS version of the Laravel package [spatie/browsershot](https://github.com/spatie/laravel-pdf).
+
 This package provides a simple way to create PDFs in AdonisJS apps. Under the hood it uses [Chromium](https://www.chromium.org/chromium-projects/) to generate PDFs from EdgeJS views. You can use modern CSS features like grid and flexbox to create beautiful PDFs.
 
 ```bash
