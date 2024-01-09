@@ -16,7 +16,7 @@ declare module '@ioc:Adonis/Addons/Pdf' {
     assertRespondedWithPdf(expectations: (pdf: PdfManagerContract) => boolean): boolean
   }
 
-  export interface PdfManagerContract {
+  export interface PdfManagerContract extends FakePdfManagerContract {
     /**
      * The name of the view for the main content.
      */

@@ -1,25 +1,19 @@
 import { Assert } from '@japa/assert'
 import { PluginFn } from '@japa/runner'
 
-import { FakePdfManagerContract, PdfManagerContract } from '@ioc:Adonis/Addons/Pdf'
+import { PdfManagerContract, Pdf } from '@ioc:Adonis/Addons/Pdf'
 
 declare module '@japa/assert' {
   interface Assert {
-    pdfViewIs(pdf: FakePdfManagerContract, viewName: string): void
+    pdfViewIs(viewName: string): void
 
-    pdfSaved(
-      pdf: FakePdfManagerContract,
-      path: string | ((pdf: PdfManagerContract, path: string) => boolean)
-    ): void
+    pdfSaved(path: string | ((pdf: PdfManagerContract, path: string) => boolean)): void
 
-    pdfViewHas(pdf: FakePdfManagerContract, key: string, value?: any): void
+    pdfViewHas(key: string, value?: any): void
 
-    pdfSee(pdf: FakePdfManagerContract, text: string | string[]): void
+    pdfSee(text: string | string[]): void
 
-    respondedWithPdf(
-      pdf: FakePdfManagerContract,
-      expectations: (pdf: PdfManagerContract) => boolean
-    ): void
+    respondedWithPdf(expectations: (pdf: PdfManagerContract) => boolean): void
   }
 }
 
@@ -28,44 +22,38 @@ declare module '@japa/assert' {
  */
 export function assertPdf() {
   const plugin: PluginFn = function () {
-    Assert.macro('pdfViewIs', function (pdf: FakePdfManagerContract, viewName: string) {
+    Assert.macro('pdfViewIs', function (viewName: string) {
       this.incrementAssertionsCount()
 
-      this.isTrue(pdf.assertViewIs(viewName))
+      this.isTrue(Pdf.assertViewIs(viewName))
     })
 
     Assert.macro(
       'pdfSaved',
-      function (
-        pdf: FakePdfManagerContract,
-        path: string | ((pdf: PdfManagerContract, path: string) => boolean)
-      ) {
+      function (path: string | ((pdf: PdfManagerContract, path: string) => boolean)) {
         this.incrementAssertionsCount()
 
-        this.isTrue(pdf.assertSaved(path))
+        this.isTrue(Pdf.assertSaved(path))
       }
     )
 
-    Assert.macro('pdfViewHas', function (pdf: FakePdfManagerContract, key: string, value?: any) {
+    Assert.macro('pdfViewHas', function (key: string, value?: any) {
       this.incrementAssertionsCount()
 
-      this.isTrue(pdf.assertViewHas(key, value))
+      this.isTrue(Pdf.assertViewHas(key, value))
     })
 
-    Assert.macro('pdfSee', function (pdf: FakePdfManagerContract, text: string | string[]) {
+    Assert.macro('pdfSee', function (text: string | string[]) {
       this.incrementAssertionsCount()
 
-      this.isTrue(pdf.assertSee(text))
+      this.isTrue(Pdf.assertSee(text))
     })
 
-    Assert.macro(
-      'respondedWithPdf',
-      function (pdf: FakePdfManagerContract, expectations: (pdf: PdfManagerContract) => boolean) {
-        this.incrementAssertionsCount()
+    Assert.macro('respondedWithPdf', function (expectations: (pdf: PdfManagerContract) => boolean) {
+      this.incrementAssertionsCount()
 
-        this.isTrue(pdf.assertRespondedWithPdf(expectations))
-      }
-    )
+      this.isTrue(Pdf.assertRespondedWithPdf(expectations))
+    })
   }
 
   return plugin
