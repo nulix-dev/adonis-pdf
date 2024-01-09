@@ -4,7 +4,7 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![run-tests](https://img.shields.io/github/actions/workflow/status/nulix-dev/adonis-pdf/test.yml?label=tests&style=flat-square)](https://github.com/nulix-dev/adonis-pdf/actions)
 
-This package provides a simple way to create PDFs in AdonisJS apps. Under the hood it uses [Chromium](https://www.chromium.org/chromium-projects/) to generate PDFs from Blade views. You can use modern CSS features like grid and flexbox to create beautiful PDFs.
+This package provides a simple way to create PDFs in AdonisJS apps. Under the hood it uses [Chromium](https://www.chromium.org/chromium-projects/) to generate PDFs from EdgeJS views. You can use modern CSS features like grid and flexbox to create beautiful PDFs.
 
 ```bash
 npm i @nulix/adonis-pdf
@@ -48,11 +48,20 @@ class DownloadInvoiceController
 
 You can use also test your PDFs:
 
+First you have to register it as a plugin within the entry point file, i.e. (test/bootstrap.ts)
+
+```ts
+import { assertPdf } from '@nulix/adonis-pdf'
+
+export const plugins: Required<Config>['plugins'] = [assert(), runFailedTests(), apiClient(), assertPdf()]
+```
+
+Then, you can use the new assert functions inside your tests:
+
 ```ts
 import { test } from "@japa/core"
 
 import { Pdf } from "@ioc:Adonis/Addons/Pdf"
-
 
 test('can render an invoice', async ({ client, assert }) => {
   const pdf = Pdf.fake();
@@ -60,7 +69,7 @@ test('can render an invoice', async ({ client, assert }) => {
   const response = await client.get('/')
 
   response.assertStatus(200)
-  response.assertBodyContains({ hello: 'world' })
+  assert.pdfViewIs(pdf, 'home')
 })
 
 ```

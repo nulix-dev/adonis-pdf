@@ -183,7 +183,7 @@ declare module '@ioc:Adonis/Addons/Pdf' {
     /**
      * Set the disk for storage.
      */
-    disk(diskName: DisksList): this
+    disk(diskName: keyof DisksList): this
 
     /**
      * Generate an HTTP response for the PDF.
