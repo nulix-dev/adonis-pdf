@@ -233,6 +233,14 @@ class PdfManager extends fake_1.FakePdfManager {
         }
         return response.send(pdfContent);
     }
+    async buffer() {
+        const browsershotInstance = await this.getBrowsershot();
+        if (this.isFake) {
+            this.addFakePdf();
+            return;
+        }
+        return browsershotInstance.pdf();
+    }
     addHeaders(headers) {
         this.responseHeaders = { ...this.responseHeaders, ...headers };
         return this;

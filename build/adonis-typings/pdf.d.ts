@@ -1,3 +1,4 @@
+/// <reference types="node" />
 /// <reference types="@adonisjs/drive/build/adonis-typings" />
 /// <reference types="@adonisjs/http-server/build/adonis-typings" />
 declare module '@ioc:Adonis/Addons/Pdf' {
@@ -135,6 +136,10 @@ declare module '@ioc:Adonis/Addons/Pdf' {
          * Generate base64-encoded PDF.
          */
         base64(): Promise<string>;
+        /**
+         * Generate a Buffer for the PDF.
+         */
+        buffer(): Promise<Buffer | undefined>;
         /**
          * Set margins for the PDF.
          */

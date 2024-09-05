@@ -1,6 +1,7 @@
 /// <reference types="@adonisjs/drive/build/adonis-typings" />
 /// <reference types="@adonisjs/view" />
 /// <reference types="@adonisjs/http-server/build/adonis-typings" />
+/// <reference types="node" />
 import { Browsershot, Unit, Format, BrowserCommandOptions } from '@nulix/browsershot';
 import { ViewContract } from '@ioc:Adonis/Core/View';
 import { PdfManagerContract } from '@ioc:Adonis/Addons/Pdf';
@@ -80,6 +81,7 @@ export declare class PdfManager extends FakePdfManager implements PdfManagerCont
     protected getFooterHtml(): Promise<string | undefined>;
     protected getBrowsershot(): Promise<Browsershot>;
     toResponse(response: ResponseContract): Promise<void>;
+    buffer(): Promise<Buffer | undefined>;
     protected addHeaders(headers: Record<string, string>): this;
     protected hasHeader(headerName: string): boolean;
     isInline(): boolean;
