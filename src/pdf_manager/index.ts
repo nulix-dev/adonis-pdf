@@ -321,11 +321,8 @@ export class PdfManager extends FakePdfManager implements PdfManagerContract {
       browsershot.noSandbox()
     }
 
-    if (Object.keys(this.additionalBrowserOptions).length) {
-      const entries = Object.entries(this.additionalBrowserOptions)
-      for (const [key, value] of entries) {
-        browsershot.setOption(key, value)
-      }
+    for (const key in this.additionalBrowserOptions) {
+      browsershot.setOption(key, this.additionalBrowserOptions[key])
     }
 
     if (this.customizeBrowsershot) {
