@@ -357,6 +357,18 @@ export class PdfManager extends FakePdfManager implements PdfManagerContract {
     return response.send(pdfContent)
   }
 
+  public async buffer() {
+    const browsershotInstance = await this.getBrowsershot()
+
+    if (this.isFake) {
+      this.addFakePdf()
+
+      return
+    }
+
+    return browsershotInstance.pdf()
+  }
+
   protected addHeaders(headers: Record<string, string>) {
     this.responseHeaders = { ...this.responseHeaders, ...headers }
 

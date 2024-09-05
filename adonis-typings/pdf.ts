@@ -171,6 +171,11 @@ declare module '@ioc:Adonis/Addons/Pdf' {
     base64(): Promise<string>
 
     /**
+     * Generate a Buffer for the PDF.
+     */
+    buffer(): Promise<Buffer | undefined>
+
+    /**
      * Set margins for the PDF.
      */
     margins(top?: number, right?: number, bottom?: number, left?: number, unit?: Unit): this
