@@ -1,5 +1,5 @@
 declare module '@ioc:Adonis/Addons/Pdf' {
-  import { Unit, Format } from '@nulix/browsershot'
+  import { Unit, Format, BrowserCommandOptions } from '@nulix/browsershot'
 
   import { DisksList } from '@ioc:Adonis/Core/Drive'
   import { ResponseContract } from '@ioc:Adonis/Core/Response'
@@ -87,6 +87,16 @@ declare module '@ioc:Adonis/Addons/Pdf' {
       left: number
       unit: Unit
     }
+
+    /**
+     * The sandbox status for Browsershot.
+     */
+    _noSandbox: boolean
+
+    /**
+     * Additional options for Browsershot.
+     */
+    additionalBrowserOptions: Partial<BrowserCommandOptions>
 
     fake(): FakePdfManagerContract
 
@@ -199,6 +209,16 @@ declare module '@ioc:Adonis/Addons/Pdf' {
      * Check if the PDF should be downloaded.
      */
     isDownload(): boolean
+
+    /**
+     * Use the sandbox for Browsershot.
+     */
+    useSandbox(): this
+
+    /**
+     * Add custom options to Browsershot.
+     */
+    setBrowsershotOptions(options: Partial<BrowserCommandOptions>): this
   }
 
   const Pdf: PdfManagerContract

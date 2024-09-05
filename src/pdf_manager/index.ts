@@ -1,4 +1,4 @@
-import { Browsershot, Unit, Format } from '@nulix/browsershot'
+import { Browsershot, Unit, Format, BrowserCommandOptions } from '@nulix/browsershot'
 
 import { ViewContract } from '@ioc:Adonis/Core/View'
 import { PdfManagerContract } from '@ioc:Adonis/Addons/Pdf'
@@ -22,6 +22,7 @@ export class PdfManager extends FakePdfManager implements PdfManagerContract {
     left: number
     unit: Unit
   }
+  public _noSandbox = true
 
   public viewName: string = ''
   public viewData: object = {}
@@ -31,6 +32,7 @@ export class PdfManager extends FakePdfManager implements PdfManagerContract {
   public footerData: object = {}
   public downloadName: string = ''
   public isFake = false
+  public additionalBrowserOptions: Partial<BrowserCommandOptions> = {}
 
   protected fakePDFs: { pdf: PdfManagerContract; path: string | null }[] = []
 
@@ -210,6 +212,18 @@ export class PdfManager extends FakePdfManager implements PdfManagerContract {
     return this
   }
 
+  public useSandbox() {
+    this._noSandbox = false
+
+    return this
+  }
+
+  public setBrowsershotOptions(options: Partial<BrowserCommandOptions>) {
+    this.additionalBrowserOptions = options
+
+    return this
+  }
+
   protected async saveOnDisk(diskName: keyof DisksList, path: string) {
     const browsershotInstance = await this.getBrowsershot()
 
@@ -301,6 +315,17 @@ export class PdfManager extends FakePdfManager implements PdfManagerContract {
 
     if (this._orientation === 'Landscape') {
       browsershot.landscape()
+    }
+
+    if (!this._noSandbox) {
+      browsershot.noSandbox()
+    }
+
+    if (Object.keys(this.additionalBrowserOptions).length) {
+      const entries = Object.entries(this.additionalBrowserOptions)
+      for (const [key, value] of entries) {
+        browsershot.setOption(key, value)
+      }
     }
 
     if (this.customizeBrowsershot) {
