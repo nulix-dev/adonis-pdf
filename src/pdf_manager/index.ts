@@ -317,7 +317,7 @@ export class PdfManager extends FakePdfManager implements PdfManagerContract {
       browsershot.landscape()
     }
 
-    if (!this._noSandbox) {
+    if (this._noSandbox) {
       browsershot.noSandbox()
     }
 
