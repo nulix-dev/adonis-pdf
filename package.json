@@ -64,7 +64,7 @@
     "anyBranch": false
   },
   "dependencies": {
-    "@nulix/browsershot": "^0.2.5"
+    "@nulix/browsershot": "^0.3.0"
   },
   "peerDependencies": {
     "@adonisjs/core": "^5.0.0",
